@@ -1,0 +1,7 @@
+bcrypt==3.2.1
+dnspython==2.2.1
+Flask==2.1.2
+pip==22.0.4
+pymongo==4.1.1
+python-dotenv==0.20.0
+setuptools==47.1.0
