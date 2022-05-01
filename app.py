@@ -67,6 +67,100 @@ def home():
     # base -> only nav bar
     return render_template('base.html')
 
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    message = 'Please login to your account'
+    if "email" in session:
+        return redirect(url_for("profile"))
+
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        # check if email exists in database
+        email_found = users.find_one({"email": email})
+
+        # STUDENT
+        if email_found and email_found['role'] == os.environ.get('STUDENT'):
+            email_val = email_found['email']
+            passwordcheck = email_found['password']
+            # encode the password and check if it matches
+            if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
+                session["email"] = email_val
+                db.users.find_one_and_update({'email': session['email']}, {
+                                             '$set': {'isOnline': True}})
+                return redirect(url_for('profile'))
+            else:
+                if "email" in session:
+                    db.users.find_one_and_update({'email': session['email']}, {
+                                                 '$set': {'isOnline': True}})
+                    return redirect(url_for("profile"))
+                message = 'Wrong password'
+                return render_template('login.html', message=message)
+        # TEACHER
+        elif email_found and email_found['role'] == os.environ.get('TEACHER'):
+            email_val = email_found['email']
+            passwordcheck = email_found['password']
+            # encode the password and check if it matches
+            if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
+                session["email"] = email_val
+                db.users.find_one_and_update({'email': session['email']}, {
+                                             '$set': {'isOnline': True}})
+                return redirect(url_for("profile"))
+
+            else:
+                if "email" in session:
+                    db.users.find_one_and_update({'email': session['email']}, {
+                        '$set': {'isOnline': True}})
+                    return redirect(url_for("profile"))
+
+                message = 'Wrong password'
+                return render_template('login.html', message=message)
+        # ADMIN
+        elif email_found and email_found['role'] == os.environ.get('ADMIN'):
+            email_val = email_found['email']
+            passwordcheck = email_found['password']
+            # encode the password and check if it matches
+            if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
+                session["email"] = email_val
+                db.users.find_one_and_update({'email': session['email']}, {
+                                             '$set': {'isOnline': True}})
+                return redirect(url_for("admin"))
+
+            else:
+                if "email" in session:
+                    db.users.find_one_and_update({'email': session['email']}, {
+                        '$set': {'isOnline': True}})
+                    return redirect(url_for("admin"))
+                message = 'Wrong password'
+                return render_template('login.html', message=message)
+
+        else:
+            message = 'Email not found'
+            return render_template('login.html', message=message)
+    return render_template('login.html', message=message)
+
+
+@app.route('/profile')
+def profile():
+    if "email" in session:
+        email = session["email"]
+        return render_template('profile.html', email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/logout", methods=["POST", "GET"])
+def logout():
+    if "email" in session:
+        db.users.find_one_and_update({'email': session['email']}, {
+                                     '$set': {'isOnline': False}})
+        session.pop("email", None)
+        return render_template("base.html")
+    else:
+        return render_template('signup.html')
+
+
 
 if __name__ == "__main__":
     app.secret_key = os.environ.get('SECERT_KEY')
