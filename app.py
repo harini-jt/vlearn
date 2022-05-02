@@ -149,6 +149,13 @@ def profile():
     else:
         return redirect(url_for("login"))
 
+@app.route('/my_profile', methods=['POST', 'GET'])
+def my_profile():
+    if "email" in session:
+        email = session["email"]
+        msg = users.find_one({"email": email})
+    return render_template('my_profile.html', message = msg)
+
 
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
