@@ -15,5 +15,9 @@ An online course registration system
 ### My Porfile
 ![profile](https://user-images.githubusercontent.com/74011816/166191403-41116283-f231-4a5c-b8ab-29cf0978335b.png)
 
+### Admin Dashboard
+![admin](https://user-images.githubusercontent.com/74011816/166521268-93ff7349-0904-49b6-954e-edcb7ae39dc5.png)
+
+
 ### MongoDB 
 ![mongodb-ss](https://user-images.githubusercontent.com/74011816/166191407-dc922fd3-05d0-427a-9575-43527dfa8170.png)
