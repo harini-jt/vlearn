@@ -25,6 +25,7 @@ def home():
     # base -> only nav bar
     return render_template('base.html')
 
+
 @app.route("/signup", methods=['post', 'get'])
 def signup():
     message = ''
@@ -65,6 +66,7 @@ def signup():
             # if registered redirect to logged in as the registered user
             return render_template('profile.html', email=new_email)
     return render_template('signup.html')
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -138,3 +140,31 @@ def login():
             message = 'Email not found'
             return render_template('login.html', message=message)
     return render_template('login.html', message=message)
+
+
+@app.route('/profile')
+def profile():
+    if "email" in session:
+        email = session["email"]
+        return render_template('profile.html', email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route('/my_profile', methods=['POST', 'GET'])
+def my_profile():
+    if "email" in session:
+        email = session["email"]
+        msg = users.find_one({"email": email})
+    return render_template('my_profile.html', message=msg)
+
+
+@app.route("/logout", methods=["POST", "GET"])
+def logout():
+    if "email" in session:
+        db.users.find_one_and_update({'email': session['email']}, {
+                                     '$set': {'isOnline': False}})
+        session.pop("email", None)
+        return render_template("base.html")
+    else:
+        return render_template('signup.html')
