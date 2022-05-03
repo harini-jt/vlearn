@@ -16,7 +16,7 @@ app.secret_key = os.environ.get('SECRET_KEY')
 client = pymongo.MongoClient(os.environ.get('MONGO_URI'))
 
 # get the database name
-db = client.get_database('DB_NAME')
+db = client.get_database(os.environ.get('DB_NAME'))
 users = db[os.environ.get('USERS_COLLECTION')]
 
 
@@ -168,3 +168,22 @@ def logout():
         return render_template("base.html")
     else:
         return render_template('signup.html')
+
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    # users_list, students, instructors = [], [], []
+    onlineUsers = users.count_documents({'isOnline': True})
+    # for user in cursor1:
+    #     users_list.append(user)
+
+    noOfStd = users.count_documents({'role': "1"})
+    # for std in cursor2:
+    #     students.append(std)
+
+    noOfTeachers = users.count_documents({'role': "2"})
+    # for teacher in cursor3:
+    #     instructors.append(teacher)
+
+    return render_template('admin_dashboard.html', onlineUsers=onlineUsers, noOfStd=noOfStd, noOfTeachers=noOfTeachers)
+
