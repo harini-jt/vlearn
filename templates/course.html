@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<head>
+    <script>
+        $(document).ready(function() {
+            var zindex = 10;
+            
+            $("div.card").click(function(e) {
+                e.preventDefault();
+
+                var isShowing = false;
+
+                if ($(this).hasClass("show")) {
+                    isShowing = true
+                }
+
+                if ($("div.cards").hasClass("showing")) {
+                    // a card is already in view
+                    $("div.card.show")
+                    .removeClass("show");
+
+                    if (isShowing) {
+                        // this card was showing - reset the grid
+                        $("div.cards")
+                        .removeClass("showing");
+                    } else {
+                        // this card isn't showing - get in with it
+                        $(this)
+                        .css({
+                            zIndex: zindex
+                        })
+                        .addClass("show");
+
+                    }
+                    
+                    zindex++;
+                    
+                } else {
+                    // no cards in view
+                    $("div.cards")
+                    .addClass("showing");
+                    $(this)
+                    .css({
+                        zIndex: zindex
+                    })
+                    .addClass("show");
+                    
+                    zindex++;
+                }
+                
+            });
+        });
+    </script>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700,900);
+        // colour stuff
+        @white: #ffffff;
+        @lightBG: #dce1df;
+        @salmon: #ff6666;
+        @teal: #0096a0;
+        @tealMid: #0ebac7;
+        @tealContrast: #33ffff;
+        @tealShade: #007c85;
+        @darkGrey: #4f585e;
+        body {
+            background: @lightBG;
+            color: @darkGrey;
+            font-family: 'Source Sans Pro', sans-serif;
+            text-rendering: optimizeLegibility;
+        }
+        
+        a.btn {
+            background: @teal;
+            border-radius: 4px;
+            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
+            color: @white;
+            display: inline-block;
+            padding: 6px 30px 8px;
+            position: relative;
+            text-decoration: none;
+            transition: all 0.1s 0s ease-out;
+        }
+        
+        .no-touch a.btn:hover {
+            background: lighten(@teal, 2.5);
+            box-shadow: 0px 8px 2px 0 rgba(0, 0, 0, 0.075);
+            transform: translateY(-2px);
+            transition: all 0.25s 0s ease-out;
+        }
+        
+        .no-touch a.btn:active,
+        a.btn:active {
+            background: darken(@teal, 2.5);
+            box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.25);
+            transform: translate3d(0, 1px, 0);
+            transition: all 0.025s 0s ease-out;
+        }
+        
+        div.cards {
+            margin: 80px auto;
+            max-width: 960px;
+            text-align: center;
+        }
+        
+        div.card {
+            background: @white;
+            display: inline-block;
+            margin: 8px;
+            max-width: 300px;
+            perspective: 1000;
+            position: relative;
+            text-align: left;
+            transition: all 0.3s 0s ease-in;
+            width: 300px;
+            z-index: 1;
+            img {
+                max-width: 300px;
+            }
+            .card__image-holder {
+                background: rgba(0, 0, 0, 0.1);
+                height: 0;
+                padding-bottom: 75%;
+            }
+            div.card-title {
+                background: @white;
+                padding: 6px 15px 10px;
+                position: relative;
+                z-index: 0;
+                a.toggle-info {
+                    border-radius: 32px;
+                    height: 32px;
+                    padding: 0;
+                    position: absolute;
+                    right: 15px;
+                    top: 10px;
+                    width: 32px;
+                    span {
+                        background: @white;
+                        display: block;
+                        height: 2px;
+                        position: absolute;
+                        top: 16px;
+                        transition: all 0.15s 0s ease-out;
+                        width: 12px;
+                    }
+                    span.left {
+                        right: 14px;
+                        transform: rotate(45deg);
+                    }
+                    span.right {
+                        left: 14px;
+                        transform: rotate(-45deg);
+                    }
+                }
+                h2 {
+                    font-size: 24px;
+                    font-weight: 700;
+                    letter-spacing: -0.05em;
+                    margin: 0;
+                    padding: 0;
+                    small {
+                        display: block;
+                        font-size: 18px;
+                        font-weight: 600;
+                        letter-spacing: -0.025em;
+                    }
+                }
+            }
+            div.card-description {
+                padding: 0 15px 10px;
+                position: relative;
+                font-size: 14px;
+            }
+            div.card-actions {
+                box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.075);
+                padding: 10px 15px 20px;
+                text-align: center;
+            }
+            div.card-flap {
+                background: darken(@white, 15);
+                position: absolute;
+                width: 100%;
+                transform-origin: top;
+                transform: rotateX(-90deg);
+            }
+            div.flap1 {
+                transition: all 0.3s 0.3s ease-out;
+                z-index: -1;
+            }
+            div.flap2 {
+                transition: all 0.3s 0s ease-out;
+                z-index: -2;
+            }
+        }
+        
+        div.cards.showing {
+            div.card {
+                cursor: pointer;
+                opacity: 0.6;
+                transform: scale(0.88);
+            }
+        }
+        
+        .no-touch div.cards.showing {
+            div.card:hover {
+                opacity: 0.94;
+                transform: scale(0.92);
+            }
+        }
+        
+        div.card.show {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+            div.card-title {
+                a.toggle-info {
+                    background: @salmon !important;
+                    span {
+                        top: 15px;
+                    }
+                    span.left {
+                        right: 10px;
+                    }
+                    span.right {
+                        left: 10px;
+                    }
+                }
+            }
+            div.card-flap {
+                background: @white;
+                transform: rotateX(0deg);
+            }
+            div.flap1 {
+                transition: all 0.3s 0s ease-out;
+            }
+            div.flap2 {
+                transition: all 0.3s 0.2s ease-out;
+            }
+        }
+    </style>
+</head>
+
+{% block content %}
+<body style="background-color:white ">
+    <div class="cards">
+
+        <div class="card">
+            <div class="card__image-holder">
+                <img class="card__image" src="https://www.wscubetech.com/images/Python-Training.jpg" alt="wave" width="300" height="200" />
+            </div>
+            <div class=" card-title">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Python Training 
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+
+                    ​Our Python Courses are both thorough and efficient. We usually work on industry-associated projects.....
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://www.python.org/ " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://coursesxpert.com/wp-content/uploads/2021/01/Java-Course.jpg" alt="beach " width="300" height="200" />
+            </div>
+            <div class="card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Java
+                    <small>Complete guide</small>
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    Java is a fundamental course for candidates willing to make their careers in field of Java...
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://www.java.com/en/ " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://d1jnx9ba8s6j9r.cloudfront.net/imgver.1551437392/img/co_img_1539_1633434090.png" alt="mountain " width="300" height="200" />
+            </div>
+            <div class="card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    C++
+                    <small></small>
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    This free online course will teach you the basics of the C++ programming language ...
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://www.cplusplus.com/ " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://i.ytimg.com/vi/JnTa9XtvmfI/mqdefault.jpg" alt="field " height="200" width="300" />
+            </div>
+            <div class="card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Linear Algebra
+                    <small></small>
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    This course is all about matrices, and concisely covers the linear algebra that an engineer should know. The mathematics in this course is presented at the level...
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://en.wikipedia.org/wiki/Linear_algebra " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrLJC3_WvbczJOuZxy8-hqxbzM_he66BhhOw&usqp=CAU " alt="water " width="300" height="200" />
+            </div>
+            <div class=" card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Deep Learning
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    In this course of the Deep Learning Specialization, you will study the foundational concept of neural networks ...
+
+
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://en.wikipedia.org/wiki/Deep_learning " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-RF475zUgamvPW5fiBO3zQ1YLwnmssn_Rog&usqp=CAU" alt="river " />
+            </div>
+            <div class="card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    SQL
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    The skills necessary to be a good data scientist include being able to retrieve and work with data, and to do that you need to be well versed in SQL, the standard language for ...
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://www.mysql.com/" class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrajMO3n3QHv4c4QxqvE0WSt1laoLkbsLw1A&usqp=CAU " alt="kite " width="300" height="200" />
+            </div>
+            <div class=" card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Discrete Maths
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    This course attempts to be rigorous without being overly formal. This means, for every concept we introduce we will show at least one interesting and non-trivial result and give a full proof.
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://en.wikipedia.org/wiki/Discrete_mathematics " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlM8A7YTbPWdGqsoAl_FMHoJ68OxCMeTVzkQ&usqp=CAU" alt="underwater " />
+            </div>
+            <div class="card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Social Psychology
+                    <small></small>
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    In this course, our focus will be on surprising, entertaining, and intriguing research findings that are easy to apply in daily life. The course will also draw from the websites of Social Psychology Network
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://en.wikipedia.org/wiki/Social_psychology " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card ">
+            <div class="card__image-holder ">
+                <img class="card__image " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9mGvV3VzulNeFhXAgGifP1IksZlEFKM-eg&usqp=CAU " alt="desert " />
+            </div>
+            <div class="card-title ">
+                <a href="# " class="toggle-info btn ">
+                    <span class="left "></span>
+                    <span class="right "></span>
+                </a>
+                <h2>
+                    Anatomy Intro
+                </h2>
+            </div>
+            <div class="card-flap flap1 ">
+                <div class="card-description ">
+                    In this course you will explore human anatomy using a systems approach, and a vast library of multimedia materials, so you may understand the features of different organ systems in relation to the human body’s form and function.
+                </div>
+                <div class="card-flap flap2 ">
+                    <div class="card-actions ">
+                        <a href="https://en.wikipedia.org/wiki/Anatomy " class="btn ">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+{% endblock%}
