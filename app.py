@@ -165,7 +165,7 @@ def profile():
         for crs in cursor:
             courses_list.append(crs)
 
-        return render_template('base.html', email=email, len=len(courses_list), courses_list=courses_list)
+        return render_template('profile.html', email=email, len=len(courses_list), courses_list=courses_list)
         # return render_template('profile.html', email=email)
     else:
         return redirect(url_for("login"))
