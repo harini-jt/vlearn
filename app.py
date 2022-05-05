@@ -19,6 +19,7 @@ client = pymongo.MongoClient(os.environ.get('MONGO_URI'))
 db = client.get_database(os.environ.get('DB_NAME'))
 users = db[os.environ.get('USERS_COLLECTION')]
 courses = db[os.environ.get('COURSES_COLLECTION')]
+registrations = db[os.environ.get('REGISTRATION_COLLECTION')]
 
 
 def check_admin(email):
@@ -179,7 +180,7 @@ def my_profile():
     return render_template('my_profile.html', message=msg)
 
 
-@app.route("/logout", methods=["POST", "GET"])
+@app.route('/logout', methods=["POST", "GET"])
 def logout():
     if "email" in session:
         db.users.find_one_and_update({'email': session['email']}, {
@@ -212,8 +213,8 @@ def admin():
     return render_template('admin_dashboard.html', onlineUsers=onlineUsers, noOfStd=noOfStd, noOfTeachers=noOfTeachers, noOfCourses=len(courses_list))
 
 
-@app.route("/add_course", methods=["GET", "POST"])
-def upload():
+@app.route('/add_course', methods=["GET", "POST"])
+def add_course():
     try:
         # if request.method == "POST" and check_admin(session['email']):
         coursename = request.form.get("title")
@@ -226,6 +227,52 @@ def upload():
         pass
     return render_template("add_course.html")
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def course_register():
+    try:
+        message, user = None, None
+        if 'email' in session:
+            user = users.find({'email': session['email']})
+            courses_list = []
+            cursor = courses.find()
+            for crs in cursor:
+                courses_list.append(crs)
+        
+        if request.method == "POST":
+            email = request.form.get("email")
+            course_num = request.form.get("course_name")
+            # course_selected = courses.find({'course_name': course_name})
+            message = 'Registered for the course.' + '\n Please wait for confirmation.'
+            return render_template('success.html', message = message)
+
+
+    except KeyError:
+        message = 'You\'ve not logged in!!'
+        return render_template('error.html', message = message)
+    return render_template('course_register.html', len = len(courses_list), user = user, courses_list = courses_list)
+
+
+@app.route('/my_courses', methods=['GET', 'POST'])
+def my_courses():
+    try:
+        message, user = None, None
+        if 'email' in session:
+            user = users.find({'email': session['email']})
+            courses_list = []
+            cursor = courses.find()
+            for crs in cursor:
+                courses_list.append(crs)
+            return render_template('course_register.html', len = len(courses_list), user = user, courses_list = courses_list)
+        
+
+    except KeyError:
+        message = 'You\'ve not logged in!!'
+        return render_template('error.html', message = message)
+
+
+
+    # return render_template('register.html', user_details, courses_list = courses_list)
 
 @app.route('/show', methods=['GET'])
 def show():
