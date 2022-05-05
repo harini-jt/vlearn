@@ -18,12 +18,24 @@ client = pymongo.MongoClient(os.environ.get('MONGO_URI'))
 # get the database name
 db = client.get_database(os.environ.get('DB_NAME'))
 users = db[os.environ.get('USERS_COLLECTION')]
+courses = db[os.environ.get('COURSES_COLLECTION')]
 
 
+def check_admin(email):
+    admin = users.find_one(email)
+    if admin['role'] == "0":
+        return True
+    return False
+    
 @app.route('/', methods=['GET'])
 def home():
     # base -> only nav bar
-    return render_template('base.html')
+    courses_list = []
+    cursor = courses.find()
+    for crs in cursor:
+        courses_list.append(crs)
+    # return render_template('courses.html', len = len(courses_list), courses_list = courses_list)
+    return render_template('base.html', len = len(courses_list), courses_list = courses_list)
 
 
 @app.route("/signup", methods=['post', 'get'])
@@ -184,6 +196,31 @@ def admin():
     noOfTeachers = users.count_documents({'role': "2"})
     # for teacher in cursor3:
     #     instructors.append(teacher)
+    courses_list = []
+    cursor =  courses.find()
+    for crs in cursor:
+        courses_list.append(crs)
 
-    return render_template('admin_dashboard.html', onlineUsers=onlineUsers, noOfStd=noOfStd, noOfTeachers=noOfTeachers)
+    return render_template('admin_dashboard.html', onlineUsers=onlineUsers, noOfStd=noOfStd, noOfTeachers=noOfTeachers, noOfCourses = len(courses_list))
 
+@app.route("/add_course", methods=["GET", "POST"])
+def upload():
+    try:
+        # if request.method == "POST" and check_admin(session['email']):
+        coursename = request.form.get("title")
+        img_url = request.form.get("img_url")
+        descp = request.form.get("description")
+        price = request.form.get("price")
+        courses.insert_one({'course_name': coursename, 'price': price, 'description': descp, 'img_url': img_url})
+    except:
+        pass
+    return render_template("add_course.html")
+
+@app.route('/show', methods= ['GET'])
+def show():
+    courses_list = []
+    cursor = courses.find()
+    for crs in cursor:
+        courses_list.append(crs)
+    return render_template('courses.html', len = len(courses_list), courses_list = courses_list)
+        

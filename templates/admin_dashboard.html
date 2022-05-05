@@ -17,9 +17,9 @@
             <div class="card-body">
               <h5 class="card-title">Number of Students</h5>
               <h4 class="card-subtitle mb-2 text-muted">{{noOfStd}}</h4>
-              <a href="#" class="card-link">Add</a>
-              <a href="#" class="card-link">Update</a>
-              <a href="#" class="card-link">Delete</a>
+              <a href="/add_student" class="card-link">Add</a>
+              <a href="/update_student" class="card-link">Update</a>
+              <a href="/del_student" class="card-link">Delete</a>
 
             </div>
         </div>
@@ -27,31 +27,25 @@
             <div class="card-body">
               <h5 class="card-title">Number of Instructors</h5>
               <h4 class="card-subtitle mb-2 text-muted">{{noOfTeachers}}</h4>
-              <a href="#" class="card-link">Add</a>
-              <a href="#" class="card-link">Update</a>
-              <a href="#" class="card-link">Delete</a>
+              <a href="/add_instructor" class="card-link">Add</a>
+              <a href="update_instructor" class="card-link">Update</a>
+              <a href="del_instructor" class="card-link">Delete</a>
 
             </div>
         </div>
+        <div class="card mb-2 mx-4" style="color: teal; width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Number of Courses</h5>
+            <h4 class="card-subtitle mb-2 text-muted">{{noOfCourses}}</h4>
+            <a href="/add_course" class="card-link">Add</a>
+            <a href="update_course" class="card-link">Update</a>
+            <a href="del_course" class="card-link">Delete</a>
+
+          </div>
+      </div>
     </div>
 
 {% endif %}
 
 {% endblock %}
 
-  <!-- <div style = "flex-direction: row;">
-        <div class="card" style="color: teal; width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Number of Users Online</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{onlineUsers}}</h6>
-              <a href="#" class="card-link">Users Info</a>
-            </div>
-        </div>
-        <div class="card" style="color: teal; width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Number of Students Online</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{noOfStd}}</h6>
-              <a href="#" class="card-link">Users Info</a>
-            </div>
-        </div>
-    </div> -->
