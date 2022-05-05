@@ -26,7 +26,8 @@ def check_admin(email):
     if admin['role'] == "0":
         return True
     return False
-    
+
+
 @app.route('/', methods=['GET'])
 def home():
     # base -> only nav bar
@@ -35,7 +36,7 @@ def home():
     for crs in cursor:
         courses_list.append(crs)
     # return render_template('courses.html', len = len(courses_list), courses_list = courses_list)
-    return render_template('base.html', len = len(courses_list), courses_list = courses_list)
+    return render_template('base.html', len=len(courses_list), courses_list=courses_list)
 
 
 @app.route("/signup", methods=['post', 'get'])
@@ -158,7 +159,14 @@ def login():
 def profile():
     if "email" in session:
         email = session["email"]
-        return render_template('profile.html', email=email)
+        
+        courses_list = []
+        cursor = courses.find()
+        for crs in cursor:
+            courses_list.append(crs)
+
+        return render_template('base.html', email=email, len=len(courses_list), courses_list=courses_list)
+        # return render_template('profile.html', email=email)
     else:
         return redirect(url_for("login"))
 
@@ -177,7 +185,7 @@ def logout():
         db.users.find_one_and_update({'email': session['email']}, {
                                      '$set': {'isOnline': False}})
         session.pop("email", None)
-        return render_template("base.html")
+        return redirect('/')
     else:
         return render_template('signup.html')
 
@@ -197,11 +205,12 @@ def admin():
     # for teacher in cursor3:
     #     instructors.append(teacher)
     courses_list = []
-    cursor =  courses.find()
+    cursor = courses.find()
     for crs in cursor:
         courses_list.append(crs)
 
-    return render_template('admin_dashboard.html', onlineUsers=onlineUsers, noOfStd=noOfStd, noOfTeachers=noOfTeachers, noOfCourses = len(courses_list))
+    return render_template('admin_dashboard.html', onlineUsers=onlineUsers, noOfStd=noOfStd, noOfTeachers=noOfTeachers, noOfCourses=len(courses_list))
+
 
 @app.route("/add_course", methods=["GET", "POST"])
 def upload():
@@ -211,16 +220,17 @@ def upload():
         img_url = request.form.get("img_url")
         descp = request.form.get("description")
         price = request.form.get("price")
-        courses.insert_one({'course_name': coursename, 'price': price, 'description': descp, 'img_url': img_url})
+        courses.insert_one({'course_name': coursename, 'price': price,
+                            'description': descp, 'img_url': img_url})
     except:
         pass
     return render_template("add_course.html")
 
-@app.route('/show', methods= ['GET'])
+
+@app.route('/show', methods=['GET'])
 def show():
     courses_list = []
     cursor = courses.find()
     for crs in cursor:
         courses_list.append(crs)
-    return render_template('courses.html', len = len(courses_list), courses_list = courses_list)
-        
+    return render_template('courses.html', len=len(courses_list), courses_list=courses_list)

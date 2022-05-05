@@ -46,7 +46,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
     {% block content %}
-    <p>Hello You have Logged in as {{ email }}</p>
+      {% if courses_list %}
+        {% include "courses.html"%}
+      {%end if%}
     {% endblock %}
 </body>
 </html>
