@@ -20,9 +20,9 @@ An online course registration system
 ![admin](https://user-images.githubusercontent.com/74011816/166985976-cdb3f97e-bf16-44b2-82ef-7c892478073c.png)
 
 ### Add Course
-![add_course](https://user-images.githubusercontent.com/74011816/166985976-cdb3f97e-bf16-44b2-82ef-7c892478073c.png)
+![add_course](https://user-images.githubusercontent.com/74011816/166992796-71c75588-3b05-408d-94e1-d3a7d3435565.png)
 
 ### MongoDB 
 ![mongodb-users](https://user-images.githubusercontent.com/74011816/166191407-dc922fd3-05d0-427a-9575-43527dfa8170.png)
 
-![mongodb-courses]("https://user-images.githubusercontent.com/74011816/166986544-2d3869d9-6283-4dc4-b8f3-a46eb978d5f7.png")
+![mongodb-courses](https://user-images.githubusercontent.com/74011816/166991337-9e671692-ff29-48e0-951a-ef31335c4718.png)
