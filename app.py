@@ -232,6 +232,9 @@ def add_course():
 def course_register():
     try:
         message, user = None, None
+        if 'email' not in session:
+            message = 'You\'ve not logged in!!'
+            return render_template('error.html', message = message)
         if 'email' in session:
             user = users.find({'email': session['email']})
             courses_list = []
