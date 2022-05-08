@@ -28,16 +28,20 @@ def check_admin(email):
         return True
     return False
 
-
-@app.route('/', methods=['GET'])
-def home():
-    # base -> only nav bar
+def get_courses():
     courses_list = []
     cursor = courses.find()
     for crs in cursor:
         courses_list.append(crs)
+    return len(courses_list), courses_list
+
+
+@app.route('/', methods=['GET'])
+def home():
+    # base -> only nav bar
+    len, courses_list = get_courses()
     # return render_template('courses.html', len = len(courses_list), courses_list = courses_list)
-    return render_template('base.html', len=len(courses_list), courses_list=courses_list)
+    return render_template('base.html', len=len, courses_list=courses_list)
 
 
 @app.route("/signup", methods=['post', 'get'])
@@ -56,15 +60,16 @@ def signup():
         # if found in database showcase that it's found
         user_found = users.find_one({"name": user})
         email_found = users.find_one({"email": email})
+        len, courses_list = get_courses()
         if user_found:
             message = 'There already is a user by that name'
-            return render_template('index.html', message=message)
+            return render_template('base.html', signuperror=message, len = len, courses_list = courses_list)
         if email_found:
             message = 'This email already exists in database'
-            return render_template('index.html', message=message)
+            return render_template('base.html', signuperror=message, len = len, courses_list = courses_list)
         if password1 != password2:
             message = 'Passwords should match!'
-            return render_template('index.html', message=message)
+            return render_template('base.html', signuperror=message, len = len, courses_list = courses_list)
         else:
             # hash the password and encode it
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
@@ -78,7 +83,8 @@ def signup():
             user_data = users.find_one({"email": email})
             new_email = user_data['email']
             # if registered redirect to logged in as the registered user
-            return render_template('profile.html', email=new_email)
+            return redirect(url_for('profile'))
+            # return render_template('profile.html', email=new_email)
     return render_template('signup.html')
 
 
@@ -221,8 +227,10 @@ def add_course():
         img_url = request.form.get("img_url")
         descp = request.form.get("description")
         price = request.form.get("price")
-        courses.insert_one({'course_name': coursename, 'price': price,
-                            'description': descp, 'img_url': img_url})
+        if coursename and descp and price:
+            new_course = {'course_name': coursename, 'price': price,
+                                'description': descp, 'img_url': img_url}
+            courses.insert_one(new_course)
     except:
         pass
     return render_template("add_course.html")
