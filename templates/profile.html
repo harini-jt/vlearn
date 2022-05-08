@@ -23,7 +23,7 @@
         </ul>
       
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control mr-sm-2 live-search-box" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
         </form>
         <div class="nav-item dropdown mx-2 my-sm-0">
@@ -44,7 +44,30 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+        
+            $('.live-search-list div').each(function(){
+            $(this).attr('data-search-term', $(this).text().toLowerCase());
+            });
+              
+            $('.live-search-box').on('keyup', function(){
+              
+            var searchTerm = $(this).val().toLowerCase();
+              
+                $('.live-search-list div').each(function(){
+              
+                    if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+              });
+            });   
+        });
+    </script>
     {% block content %}
         {% if courses_list%}
             {%include "courses.html" %}
